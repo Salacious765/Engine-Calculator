@@ -64,14 +64,11 @@ def completeEngine(engine):
     listEngine(engine)
 
 # Neatly lists the engine spec
-class listClass:
-    def listEngine(engine):
-        for a,b in engine.items():
-            if b == "":
-                b = "N/A"
-            print(a,":",b)
-    def listEngine(engine, lines):
-        print("wa")
+def listEngine(engine):
+    for a,b in engine.items():
+        if b == "":
+            b = "N/A"
+        print(a,":",b)
 #CALCULATIONS
 
 #Vd Swept Displacement volume
