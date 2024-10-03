@@ -1,4 +1,4 @@
-import sys
+;import sys
 import math
 import csv
 
@@ -50,15 +50,31 @@ def selectEngine(data, selected):
 
 #CompleteEngine finds the gaps in the data and attempts to fill them
 def completeEngine(engine):
+
     print("---Calculating Engine---")
+
     if engine.get("Swept Displacement") == "":
         try:
             engine.update({"Swept Displacement" : Vd(engine["Bore"], engine["Stroke"])})
         except Exception as err:
             print("Failed", err)
+
     if engine.get("Total Swept Displacement") == "":
         try:
             engine.update({"Total Swept Displacement" : cc(engine["Swept Displacement"], engine["Cylinders"])})
+        except:
+            print("Failed", err)
+
+    if engine.get("Compression Ratio") == "" and engine.get("Clearance Volume") == "":
+        print("Please provide Compression Ratio or Clearance Volume")
+    elif engine.get("Clearance Volume") == "":
+        try:
+            engine.update({"Clearance Volume" : Vc(engine["Swept Displacement"], engine["Compression Ratio"])})
+        except:
+            print("Failed", err)
+    elif engine.get("Compression Ratio") == "":
+        try:
+            engine.update({"Compression Ratio" : rc(engine["Swept Displacement"], engine["Clearance Volume"])})
         except:
             print("Failed", err)
     listEngine(engine)
@@ -68,6 +84,8 @@ def listEngine(engine):
     for a,b in engine.items():
         if b == "":
             b = "N/A"
+        elif isinstance(b, float):
+            b = round(b, 2)
         print(a,":",b)
 #CALCULATIONS
 
@@ -75,6 +93,10 @@ def listEngine(engine):
 def Vd(B, L):
     Vd = (math.pi * ((B/2) ** 2) * L)
     return Vd
+
+def Vc(Vd, rc):
+    Vc = Vd / (rc - 1) 
+    return Vc
 
 #rc Compression Ratio
 def rc(Vd, Vc):
